@@ -1,11 +1,14 @@
 import { NavLink } from "react-router-dom";
-import { Home, CalendarDays, Flag, Trophy } from "lucide-react";
+import { Home, CalendarDays, Flag, Trophy, Users, Car, Newspaper } from "lucide-react";
 
 const links = [
   { to: "/", label: "Home", Icon: Home },
   { to: "/calendar", label: "Calendar", Icon: CalendarDays },
   { to: "/results", label: "Results", Icon: Flag },
   { to: "/standings", label: "Standings", Icon: Trophy },
+  { to: "/drivers", label: "Drivers", Icon: Users },
+  { to: "/teams", label: "Teams", Icon: Car },
+  { to: "/news", label: "News", Icon: Newspaper },
 ];
 
 export default function Navbar() {
