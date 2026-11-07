@@ -1,5 +1,5 @@
-import { ArrowLeft, Trophy } from "lucide-react";
 import { useSearchParams } from "react-router-dom";
+import { ArrowLeft, Trophy } from "lucide-react";
 import {
   getSeasons, getWinners, getRaceResults,
   getDriverStandings, getConstructorStandings,
@@ -50,8 +50,8 @@ export default function Results() {
 
       {tab === "races" && round && (
         <button onClick={() => setParams({ year, tab })}
-          style={{ marginBottom: 12, background: "none", border: 0, color: "var(--red)", fontWeight: 600 }}>
-          ← Semua race {year}
+          style={{ marginBottom: 12, background: "none", border: 0, color: "var(--red)", fontWeight: 600, display: "flex", alignItems: "center", gap: 6 }}>
+          <ArrowLeft size={16} /> Semua race {year}
         </button>
       )}
 
@@ -68,8 +68,9 @@ export default function Results() {
             style={{ display: "block", width: "100%", textAlign: "left", background: "var(--surface)", color: "#fff", border: 0, padding: 14, borderRadius: 8, marginBottom: 8 }}>
             <div style={{ color: "var(--muted)", fontSize: 12 }}>R{race.round} · {race.date}</div>
             <div style={{ fontWeight: 600 }}>{race.raceName}</div>
-            <div style={{ fontSize: 13 }}>
-              🏆 {w.Driver.givenName} {w.Driver.familyName}
+            <div style={{ fontSize: 13, display: "flex", alignItems: "center", gap: 6 }}>
+              <Trophy size={14} color="var(--red)" />
+              <span>{w.Driver.givenName} {w.Driver.familyName}</span>
               <span style={{ color: "var(--muted)" }}> · {w.Constructor.name} · {w.Time?.time}</span>
             </div>
           </button>
