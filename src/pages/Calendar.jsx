@@ -1,4 +1,5 @@
 import { Link, useSearchParams } from "react-router-dom";
+import { ChevronRight } from "lucide-react";
 import { getSchedule } from "../api/jolpica";
 import useFetch from "../hooks/useFetch";
 import { Loading, ErrorBox, Empty } from "../components/States";
@@ -44,7 +45,11 @@ export default function Calendar() {
             </div>
             <div style={{ textAlign: "right", whiteSpace: "nowrap" }}>
               <div>{fmtDate(raceDate(r))}</div>
-              {tab === "previous" && <div style={{ color: "var(--red)", fontSize: 13 }}>Keputusan →</div>}
+              {tab === "previous" && (
+                <div style={{ color: "var(--red)", fontSize: 13, display: "flex", alignItems: "center", justifyContent: "flex-end" }}>
+                  Keputusan <ChevronRight size={14} />
+                </div>
+              )}
             </div>
           </div>
         );
