@@ -1,4 +1,4 @@
-import { teamColor } from "../utils/teamColor";
+import { teamColor } from "../utils/teamColors";
 
 export default function StandingsTable({ rows, type }) {
   return (
