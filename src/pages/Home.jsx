@@ -1,8 +1,9 @@
 import { Link } from "react-router-dom";
-import { Timer, Users, Flag, ArrowRight } from "lucide-react";
+import { Timer, Users, Flag, ArrowRight, CloudSun } from "lucide-react";
 import { getSchedule, getDriverStandings, getLastResults } from "../api/jolpica";
 import useFetch from "../hooks/useFetch";
 import Countdown from "../components/Countdown";
+import ForecastCard from "../components/ForecastCard";
 import { Loading, ErrorBox, Empty } from "../components/States";
 import { findNextSession, getSessions, fmtSession } from "../utils/time";
 
@@ -42,6 +43,13 @@ export default function Home() {
           </>
         )}
       </section>
+
+      {next && (
+        <section style={card}>
+          <h3 style={{ ...label, marginBottom: 8 }}><CloudSun size={14} /> RAMALAN CUACA (LOKASI LITAR)</h3>
+          <ForecastCard race={next.race} />
+        </section>
+      )}
 
       <section style={card}>
         <h3 style={{ ...label, marginBottom: 8 }}><Users size={14} /> TOP 3 PEMANDU</h3>
