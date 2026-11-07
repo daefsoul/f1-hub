@@ -83,4 +83,3 @@ export async function getSeasons() {
   const data = await get(`/seasons.json?limit=100`, DAY);
   return data.MRData.SeasonTable.Seasons.map((s) => s.season).reverse();
 }
-
