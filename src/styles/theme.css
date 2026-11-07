@@ -1,0 +1,15 @@
+:root {
+  --red: #E10600;
+  --bg: #15151E;
+  --surface: #1F1F2B;
+  --text: #FFFFFF;
+  --muted: #A0A0B0;
+}
+* { box-sizing: border-box; margin: 0; }
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: Inter, sans-serif;
+}
+h1, h2, h3 { font-family: "Titillium Web", sans-serif; }
+.page { padding: 16px; max-width: 900px; margin: 0 auto; }
