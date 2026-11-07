@@ -1,3 +1,4 @@
+import { ArrowLeft, Trophy } from "lucide-react";
 import { useSearchParams } from "react-router-dom";
 import {
   getSeasons, getWinners, getRaceResults,
