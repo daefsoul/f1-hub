@@ -1,10 +1,9 @@
-import { useEffect, useState } from "react";
-import { getDriverStandings, getConstructorStandings } from "../api/jolpica";
+import { useEffect } from "react";
+import { getDriverStandings } from "../api/jolpica";
 
-export default function Standings(){
-    const [tab, setTab] = useState("drivers");
-    const [rows, setRows] = useState([]);
-    const [status, setStatus] = useState("loading");
-
-    useEffect
+export default function Standings() {
+  useEffect(() => {
+    getDriverStandings().then((d) => console.log("drivers", d));
+  }, []);
+  return <div className="page"><h1>Standings</h1></div>;
 }
