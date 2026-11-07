@@ -30,7 +30,8 @@ export function findNextSession(races) {
 }
 
 // Race dikira tamat 3 jam selepas mula
-export const raceEnded = (race) => toDate(race).getTime() + 3 * 3600 * 1000 < Date.now();
+export const raceEnded = (race) =>
+  toDate(race).getTime() + 3 * 3600 * 1000 < Date.now();
 
 export const fmtSession = (d) =>
   new Intl.DateTimeFormat(undefined, {
