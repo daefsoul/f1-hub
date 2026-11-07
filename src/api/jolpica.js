@@ -1,44 +1,57 @@
-const { cache } = require("react");
+import { getCache, setCache } from "../utils/cache";
 
 const BASE = "https://api.jolpi.ca/ergast/f1";
-const CACHE_MINUTES = 10;
+const MIN_GAP_MS = 400; // jeda antara request
+const MIN = 60 * 1000;
+const HOUR = 60 * MIN;
 
-async function get(path) {
-    const key = 'jolpica:${path}';
-    try {
-        const cached = JSON.parse(localStorage.getItem(key));
-        if (cached && Date.now() - cached.time < CACHE_MINUTES * 60000) {
-            return cached.data;
-        }
-    } catch {}
+const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 
-    const res = await fetch('${BASE}${path}.json');
-    if (res.status === 429) throw new Error("Too many request, please try again later");
-    if (!res.ok) throw new Error('API error: ${res.status}');
+// Giliran: request jalan satu demi satu, ada jeda
+let chain = Promise.resolve();
+let lastCall = 0;
 
-    const data = (await res.json()).MRData;
-    try { 
-        localStorage.setItem(key, JSON.stringify({ time: Date.now(), data}));
-    } catch {}
-    return data;
+function queued(task) {
+  const run = chain.then(async () => {
+    const wait = Math.max(0, lastCall + MIN_GAP_MS - Date.now());
+    if (wait) await sleep(wait);
+    lastCall = Date.now();
+    return task();
+  });
+  chain = run.catch(() => {});
+  return run;
+}
+
+// Retry perlahan bila 429 (exponential backoff)
+async function fetchJson(url, tries = 3) {
+  for (let i = 0; i < tries; i++) {
+    const res = await fetch(url);
+    if (res.status === 429) {
+      await sleep(1000 * 2 ** i);
+      continue;
+    }
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    return res.json();
+  }
+  throw new Error("Terlalu banyak request (429), cuba sebentar lagi");
+}
+
+async function get(path, ttl) {
+  const cached = getCache(path);
+  if (cached) return cached;
+  const data = await queued(() => fetchJson(`${BASE}${path}`));
+  setCache(path, data, ttl);
+  return data;
 }
 
 export async function getDriverStandings(season = "current") {
-    const d = await get('/${season}/driverStandings');
-    return d.StandingsTable.StandingsLists[0]?.DriverStandings ?? [];
+  const data = await get(`/${season}/driverStandings.json`, 10 * MIN);
+  const list = data.MRData.StandingsTable.StandingsLists[0];
+  return list ? list.DriverStandings : [];
 }
 
 export async function getConstructorStandings(season = "current") {
-    const d = await get('/$season}/constructorStandings');
-    return d.StandingsTable.StandingsLists[0]?.ConstructorStandings ?? [];
-}
-
-export async function getSchedule(season = "current") {
-    const d = await get('/$season}/races');
-    return d.RaceTable.Races;
-}
-
-export async function getResults(season, round) {
-    const d = await get('/$season}/${round}/results');
-    return d.RaceTable.Races[0]?.Results ?? [];
+  const data = await get(`/${season}/constructorStandings.json`, 10 * MIN);
+  const list = data.MRData.StandingsTable.StandingsLists[0];
+  return list ? list.ConstructorStandings : [];
 }
